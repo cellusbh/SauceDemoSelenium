@@ -1,0 +1,34 @@
+package sauceDemo.pages;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+
+public class LoginPage extends BasePage {
+
+    @FindBy(id = "user-name")
+    private WebElement insertUsername;
+
+    @FindBy(id = "password")
+    private WebElement insertPassword;
+
+    @FindBy(id = "login-button")
+    private WebElement loginButton;
+
+    public LoginPage(WebDriver navegador) {
+        super(navegador);
+    }
+
+    public LoginPage accessPage() {
+        navegador.get("https://www.saucedemo.com/");
+        return new LoginPage(navegador);
+    }
+
+    public HomePage register(String username, String password) {
+        insertUsername.sendKeys(username);
+        insertPassword.sendKeys(password);
+        loginButton.click();
+        return new HomePage(navegador);
+    }
+
+}

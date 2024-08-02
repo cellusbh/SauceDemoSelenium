@@ -1,4 +1,4 @@
-package sauceDemo;
+package sauceDemo.tests;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
@@ -6,11 +6,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import sauceDemo.pages.*;
 
 import java.time.Duration;
 
 @DisplayName("testes automatizados no saucedemo.com")
-public class SignUpTests {
+public class Tests {
 
     private WebDriver navegador;
 
@@ -20,7 +21,6 @@ public class SignUpTests {
         // abrir o navegador
         WebDriverManager.chromedriver().setup();
         navegador = new ChromeDriver();
-        navegador.get("https://www.saucedemo.com/");
         navegador.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
     }
@@ -32,24 +32,22 @@ public class SignUpTests {
         if (navegador != null) {
             navegador.quit();
         }
+
     }
 
     @Test
     @DisplayName("sign up success")
     public void testSignUpSuccess() {
 
-        // digitar o username correto
-        navegador.findElement(By.id("user-name")).sendKeys("visual_user");
-
-        // digitar o password correto
-        navegador.findElement(By.id("password")).sendKeys("secret_sauce");
-
-        // clicar no botao de login
-        navegador.findElement(By.id("login-button")).click();
+        new LoginPage(navegador)
+                .accessPage();
 
         // validar que o texto "Swag Labs" foi apresentado no elemento class "app_logo"
-        String swagLabs = navegador.findElement(By.className("app_logo")).getText();
+        String swagLabs = navegador.findElement(By.className("login_logo")).getText();
         Assertions.assertEquals("Swag Labs", swagLabs);
+
+        new LoginPage(navegador)
+                .register("visual_user", "secret_sauce");
 
         // validar que o texto "Products" foi apresentado no elemento class "span"
         String products = navegador.findElement(By.xpath("//span[text()='Products']")).getText();
@@ -61,14 +59,9 @@ public class SignUpTests {
     @DisplayName("sign up fail")
     public void testSignUpFail() {
 
-        // digitar o username incorreto
-        navegador.findElement(By.id("user-name")).sendKeys("teste");
-
-        // digitar o password incorreto
-        navegador.findElement(By.id("password")).sendKeys("teste");
-
-        // clicar no botao de login
-        navegador.findElement(By.id("login-button")).click();
+        new LoginPage(navegador)
+                .accessPage()
+                .register("teste", "teste");
 
         // validar o background color da mensagem de erro no login
         WebElement element = navegador.findElement(By.cssSelector(".error-message-container.error"));
@@ -90,34 +83,27 @@ public class SignUpTests {
     @DisplayName("add to cart and do checkout")
     public void testAddToCartAndDoCheckout() {
 
-        // login correto
-        navegador.findElement(By.id("user-name")).sendKeys("visual_user");
-        navegador.findElement(By.id("password")).sendKeys("secret_sauce");
-        navegador.findElement(By.id("login-button")).click();
-
-        // adicionar item ao carrinho e ir para o carrinho
-        navegador.findElement(By.id("add-to-cart-sauce-labs-backpack")).click();
-        navegador.findElement(By.className("shopping_cart_link")).click();
+        new LoginPage(navegador)
+                .accessPage()
+                .register("visual_user", "secret_sauce")
+                .addBackpackToCart()
+                .goToCart();
 
         // validar se o nome do produto está correto
         String sauceLabsBackpack = navegador.findElement(By.className("inventory_item_name")).getText();
         Assertions.assertEquals("Sauce Labs Backpack", sauceLabsBackpack);
 
-        // clicar no botão de checkout
-        navegador.findElement(By.id("checkout")).click();
-
-        // digitar os dados necessários
-        navegador.findElement(By.id("first-name")).sendKeys("Diego");
-        navegador.findElement(By.id("last-name")).sendKeys("Maradona");
-        navegador.findElement(By.id("postal-code")).sendKeys("31000000");
+        new CartPage(navegador)
+                .goToCheckoutInfo()
+                .checkoutInformation("Diego", "Maradona", "31000000");
 
         // validar o background color do botão de continue
         WebElement btnContinue = navegador.findElement(By.id("continue"));
         String continueColor = btnContinue.getCssValue("background-color");
         Assertions.assertEquals("rgba(61, 220, 145, 1)", continueColor);
 
-        // clicar no botão continue
-        navegador.findElement(By.id("continue")).click();
+        new CheckoutInfoPage(navegador)
+                .clickContinue();
 
         // validar se o nome do produto está correto no checkout
         String sauceLabsCheckout = navegador.findElement(By.className("inventory_item_name")).getText();
@@ -140,8 +126,8 @@ public class SignUpTests {
         String finishColor = btnFinish.getCssValue("background-color");
         Assertions.assertEquals("rgba(61, 220, 145, 1)", finishColor);
 
-        // clicar no botão finish
-        navegador.findElement(By.id("finish")).click();
+        new CheckoutViewPage(navegador)
+                .clickFinish();
 
         // validar o texto "Checkout: Complete!"
         String complete = navegador.findElement(By.xpath("//span[text()='Checkout: Complete!']")).getText();
@@ -156,9 +142,8 @@ public class SignUpTests {
         String backHomeColor = backHome.getCssValue("background-color");
         Assertions.assertEquals("rgba(61, 220, 145, 1)", backHomeColor);
 
-        // clicar no botão back home
-        navegador.findElement(By.id("back-to-products")).click();
-
+        new CheckoutCompletePage(navegador)
+                .clickBackHome();
 
     }
 
@@ -166,12 +151,11 @@ public class SignUpTests {
     @DisplayName("add to cart and remove by click")
     public void testAddToCartAndRemoveByClick() {
 
-        navegador.findElement(By.id("user-name")).sendKeys("visual_user");
-        navegador.findElement(By.id("password")).sendKeys("secret_sauce");
-        navegador.findElement(By.id("login-button")).click();
-
-        navegador.findElement(By.id("add-to-cart-sauce-labs-backpack")).click();
-        navegador.findElement(By.id("remove-sauce-labs-backpack")).click();
+        new LoginPage(navegador)
+                .accessPage()
+                .register("visual_user", "secret_sauce")
+                .addBackpackToCart()
+                .removeBackpackToCart();
 
     }
 
@@ -179,31 +163,30 @@ public class SignUpTests {
     @DisplayName("add to cart and remove by cart")
     public void testAddToCartAndRemoveByCart() {
 
-        navegador.findElement(By.id("user-name")).sendKeys("visual_user");
-        navegador.findElement(By.id("password")).sendKeys("secret_sauce");
-        navegador.findElement(By.id("login-button")).click();
-
-        navegador.findElement(By.id("add-to-cart-sauce-labs-backpack")).click();
-        navegador.findElement(By.className("shopping_cart_link")).click();
+        new LoginPage(navegador)
+                .accessPage()
+                .register("visual_user", "secret_sauce")
+                .addBackpackToCart()
+                .goToCart();
 
         // validar que o nome do produto está correto
         String sauceLabsBackpack = navegador.findElement(By.className("inventory_item_name")).getText();
         Assertions.assertEquals("Sauce Labs Backpack", sauceLabsBackpack);
 
-        navegador.findElement(By.id("remove-sauce-labs-backpack")).click();
+        new CartPage(navegador)
+                .continueShopping();
 
     }
 
     @Test
-    @DisplayName("login success and logout")
+    @DisplayName("sign up success and logout")
     public void testLoginSuccessAndLogout() {
 
-        navegador.findElement(By.id("user-name")).sendKeys("visual_user");
-        navegador.findElement(By.id("password")).sendKeys("secret_sauce");
-        navegador.findElement(By.id("login-button")).click();
-
-        navegador.findElement(By.id("react-burger-menu-btn")).click();
-        navegador.findElement(By.id("logout_sidebar_link")).click();
+        new LoginPage(navegador)
+                .accessPage()
+                .register("visual_user", "secret_sauce")
+                .clickBurgerMenu()
+                .clickLogout();
 
     }
 
@@ -211,21 +194,18 @@ public class SignUpTests {
     @DisplayName("reset app state")
     public void testResetAppState() {
 
-        navegador.findElement(By.id("user-name")).sendKeys("visual_user");
-        navegador.findElement(By.id("password")).sendKeys("secret_sauce");
-        navegador.findElement(By.id("login-button")).click();
-
-        navegador.findElement(By.id("add-to-cart-sauce-labs-backpack")).click();
-        navegador.findElement(By.id("add-to-cart-sauce-labs-bike-light")).click();
-        navegador.findElement(By.id("add-to-cart-sauce-labs-bolt-t-shirt")).click();
-        navegador.findElement(By.id("add-to-cart-sauce-labs-fleece-jacket")).click();
-        navegador.findElement(By.id("add-to-cart-sauce-labs-onesie")).click();
-        navegador.findElement(By.id("add-to-cart-test.allthethings()-t-shirt-(red)")).click();
-
-        navegador.findElement(By.id("react-burger-menu-btn")).click();
-        navegador.findElement(By.id("reset_sidebar_link")).click();
+        new LoginPage(navegador)
+                .accessPage()
+                .register("visual_user", "secret_sauce")
+                .addRedToCart()
+                .addBackpackToCart()
+                .addBikeToCart()
+                .addBoltToCart()
+                .addJacketToCart()
+                .addOnesieToCart()
+                .clickBurgerMenu()
+                .clickReset();
 
     }
-
 
 }
