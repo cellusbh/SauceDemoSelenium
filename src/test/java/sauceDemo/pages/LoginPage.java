@@ -15,6 +15,12 @@ public class LoginPage extends BasePage {
     @FindBy(id = "login-button")
     private WebElement loginButton;
 
+    @FindBy(className = "login_logo")
+    private WebElement loginLogo;
+
+    @FindBy(css = ".error-message-container.error")
+    private WebElement errorMessage;
+
     public LoginPage(WebDriver navegador) {
         super(navegador);
     }
@@ -29,6 +35,18 @@ public class LoginPage extends BasePage {
         insertPassword.sendKeys(password);
         loginButton.click();
         return new HomePage(navegador);
+    }
+
+    public String validateLoginLogo() {
+        return loginLogo.getText();
+    }
+
+    public String validateErrorMessage() {
+        return errorMessage.getCssValue("background-color");
+    }
+
+    public String validateLoginButton() {
+        return loginButton.getCssValue("background-color");
     }
 
 }

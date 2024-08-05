@@ -15,6 +15,9 @@ public class CartPage extends BasePage {
     @FindBy(id = "checkout")
     private WebElement checkoutButton;
 
+    @FindBy(className = "inventory_item_name")
+    private WebElement itemName;
+
     public CartPage(WebDriver navegador) {
         super(navegador);
     }
@@ -32,6 +35,10 @@ public class CartPage extends BasePage {
     public CheckoutInfoPage goToCheckoutInfo() {
         checkoutButton.click();
         return new CheckoutInfoPage(navegador);
+    }
+
+    public String validateItemName() {
+        return itemName.getText();
     }
 
 }

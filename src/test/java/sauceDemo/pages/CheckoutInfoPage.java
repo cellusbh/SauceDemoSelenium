@@ -1,5 +1,6 @@
 package sauceDemo.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -32,6 +33,10 @@ public class CheckoutInfoPage extends BasePage {
     public CheckoutViewPage clickContinue() {
         continueButton.click();
         return new CheckoutViewPage(navegador);
+    }
+
+    public String validateContinue() {
+        return continueButton.getCssValue("background-color");
     }
 
 }

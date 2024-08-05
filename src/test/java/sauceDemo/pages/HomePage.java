@@ -39,8 +39,15 @@ public class HomePage extends BasePage {
     @FindBy(id = "reset_sidebar_link")
     private WebElement reset;
 
+    @FindBy(xpath = "//span[text()='Products']")
+    private WebElement products;
+
     public HomePage(WebDriver navegador) {
         super(navegador);
+    }
+
+    public String validateProducts() {
+        return products.getText();
     }
 
     public HomePage addBackpackToCart() {

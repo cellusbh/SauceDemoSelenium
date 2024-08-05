@@ -2,16 +2,14 @@ package sauceDemo.tests;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import sauceDemo.pages.*;
 
 import java.time.Duration;
 
 @DisplayName("testes automatizados no saucedemo.com")
-public class Tests {
+public class SauceDemoTests {
 
     private WebDriver navegador;
 
@@ -39,18 +37,18 @@ public class Tests {
     @DisplayName("sign up success")
     public void testSignUpSuccess() {
 
-        new LoginPage(navegador)
-                .accessPage();
+        String swagLabs = new LoginPage(navegador)
+                .accessPage()
+                .validateLoginLogo();
 
-        // validar que o texto "Swag Labs" foi apresentado no elemento class "app_logo"
-        String swagLabs = navegador.findElement(By.className("login_logo")).getText();
+        // validar que o texto "Swag Labs" foi apresentado no elemento class "login_logo"
         Assertions.assertEquals("Swag Labs", swagLabs);
 
-        new LoginPage(navegador)
-                .register("visual_user", "secret_sauce");
+        String products = new LoginPage(navegador)
+                .register("visual_user", "secret_sauce")
+                .validateProducts();
 
         // validar que o texto "Products" foi apresentado no elemento class "span"
-        String products = navegador.findElement(By.xpath("//span[text()='Products']")).getText();
         Assertions.assertEquals("Products", products);
 
     }
@@ -63,18 +61,23 @@ public class Tests {
                 .accessPage()
                 .register("teste", "teste");
 
+        String backgroundColor = new LoginPage(navegador)
+                .validateErrorMessage();
+
         // validar o background color da mensagem de erro no login
-        WebElement element = navegador.findElement(By.cssSelector(".error-message-container.error"));
-        String backgroundColor = element.getCssValue("background-color");
         Assertions.assertEquals("rgba(226, 35, 26, 1)", backgroundColor);
 
+        String loginColor = new LoginPage(navegador)
+                .validateLoginButton();
+
         // validar o background color do botão de login
-        WebElement login = navegador.findElement(By.id("login-button"));
-        String loginColor = login.getCssValue("background-color");
         Assertions.assertEquals("rgba(61, 220, 145, 1)", loginColor);
 
+        String swagLabs = new LoginPage(navegador)
+                .accessPage()
+                .validateLoginLogo();
+
         // validar que o texto "Swag Labs" foi apresentado no elemento class "login_logo"
-        String swagLabs = navegador.findElement(By.className("login_logo")).getText();
         Assertions.assertEquals("Swag Labs", swagLabs);
 
     }
@@ -83,63 +86,72 @@ public class Tests {
     @DisplayName("add to cart and do checkout")
     public void testAddToCartAndDoCheckout() {
 
-        new LoginPage(navegador)
+        String sauceLabsBackpack = new LoginPage(navegador)
                 .accessPage()
                 .register("visual_user", "secret_sauce")
                 .addBackpackToCart()
-                .goToCart();
+                .goToCart()
+                .validateItemName();
 
         // validar se o nome do produto está correto
-        String sauceLabsBackpack = navegador.findElement(By.className("inventory_item_name")).getText();
         Assertions.assertEquals("Sauce Labs Backpack", sauceLabsBackpack);
 
-        new CartPage(navegador)
+        String continueColor = new CartPage(navegador)
                 .goToCheckoutInfo()
-                .checkoutInformation("Diego", "Maradona", "31000000");
+                .checkoutInformation("Diego", "Maradona", "31000000")
+                .validateContinue();
 
         // validar o background color do botão de continue
-        WebElement btnContinue = navegador.findElement(By.id("continue"));
-        String continueColor = btnContinue.getCssValue("background-color");
         Assertions.assertEquals("rgba(61, 220, 145, 1)", continueColor);
 
-        new CheckoutInfoPage(navegador)
-                .clickContinue();
+        String sauceLabsCheckout = new CheckoutInfoPage(navegador)
+                .clickContinue()
+                .validateItemName();
 
         // validar se o nome do produto está correto no checkout
-        String sauceLabsCheckout = navegador.findElement(By.className("inventory_item_name")).getText();
         Assertions.assertEquals("Sauce Labs Backpack", sauceLabsCheckout);
 
+        String payment = new CheckoutViewPage(navegador)
+                .validatePaymentInfo();
+
         // validar o texto "Payment Information:"
-        String payment = navegador.findElement(By.xpath("//div[text()='Payment Information:']")).getText();
         Assertions.assertEquals("Payment Information:", payment);
 
+        String shipping = new CheckoutViewPage(navegador)
+                .validateShippingInfo();
+
         // validar o texto "Shipping Information:"
-        String shipping = navegador.findElement(By.xpath("//div[text()='Shipping Information:']")).getText();
         Assertions.assertEquals("Shipping Information:", shipping);
 
+        String price = new CheckoutViewPage(navegador)
+                .validatePriceTotal();
+
         // validar o texto "Price Total"
-        String price = navegador.findElement(By.xpath("//div[text()='Price Total']")).getText();
         Assertions.assertEquals("Price Total", price);
 
+        String finishColor = new CheckoutViewPage(navegador)
+                .validateFinish();
+
         // validar o background color do botão de finish
-        WebElement btnFinish = navegador.findElement(By.id("finish"));
-        String finishColor = btnFinish.getCssValue("background-color");
         Assertions.assertEquals("rgba(61, 220, 145, 1)", finishColor);
 
-        new CheckoutViewPage(navegador)
-                .clickFinish();
+        String complete = new CheckoutViewPage(navegador)
+                .clickFinish()
+                .validateComplete();
 
         // validar o texto "Checkout: Complete!"
-        String complete = navegador.findElement(By.xpath("//span[text()='Checkout: Complete!']")).getText();
         Assertions.assertEquals("Checkout: Complete!", complete);
 
+        String thankYou = new CheckoutCompletePage(navegador)
+                .validateThankYou();
+
         // validar o texto "Thank you for your order!"
-        String thankYou = navegador.findElement(By.className("complete-header")).getText();
         Assertions.assertEquals("Thank you for your order!", thankYou);
 
+        String backHomeColor = new CheckoutCompletePage(navegador)
+                .validateBackHome();
+
         // validar o background color do botão de back home
-        WebElement backHome = navegador.findElement(By.id("back-to-products"));
-        String backHomeColor = backHome.getCssValue("background-color");
         Assertions.assertEquals("rgba(61, 220, 145, 1)", backHomeColor);
 
         new CheckoutCompletePage(navegador)
@@ -163,17 +175,18 @@ public class Tests {
     @DisplayName("add to cart and remove by cart")
     public void testAddToCartAndRemoveByCart() {
 
-        new LoginPage(navegador)
+        String sauceLabsBackpack = new LoginPage(navegador)
                 .accessPage()
                 .register("visual_user", "secret_sauce")
                 .addBackpackToCart()
-                .goToCart();
+                .goToCart()
+                .validateItemName();
 
         // validar que o nome do produto está correto
-        String sauceLabsBackpack = navegador.findElement(By.className("inventory_item_name")).getText();
         Assertions.assertEquals("Sauce Labs Backpack", sauceLabsBackpack);
 
         new CartPage(navegador)
+                .removeBackpackToCart()
                 .continueShopping();
 
     }
