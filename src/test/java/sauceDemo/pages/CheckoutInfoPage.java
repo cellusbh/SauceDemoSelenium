@@ -19,20 +19,20 @@ public class CheckoutInfoPage extends BasePage {
     @FindBy(id = "continue")
     private WebElement continueButton;
 
-    public CheckoutInfoPage(WebDriver navegador) {
-        super(navegador);
+    public CheckoutInfoPage(WebDriver driver) {
+        super(driver);
     }
 
     public CheckoutInfoPage checkoutInformation(String firtName, String lastName, String postalCode) {
         insertFirstName.sendKeys(firtName);
         insertLastName.sendKeys(lastName);
         insertPostalCode.sendKeys(postalCode);
-        return new CheckoutInfoPage(navegador);
+        return new CheckoutInfoPage(driver);
     }
 
     public CheckoutViewPage clickContinue() {
         continueButton.click();
-        return new CheckoutViewPage(navegador);
+        return new CheckoutViewPage(driver);
     }
 
     public String validateContinue() {

@@ -8,162 +8,162 @@ import sauceDemo.pages.*;
 
 import java.time.Duration;
 
-@DisplayName("testes automatizados no saucedemo.com")
+@DisplayName("automated tests on saucedemo.com")
 public class SauceDemoTests {
 
-    private WebDriver navegador;
+    private WebDriver driver;
 
     @BeforeEach
     public void setUp() {
 
-        // abrir o navegador
+        // open the driver
         WebDriverManager.chromedriver().setup();
-        navegador = new ChromeDriver();
-        navegador.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
     }
 
     @AfterEach
     public void tearDown() {
 
-        // fechar o navegador
-        if (navegador != null) {
-            navegador.quit();
+        // close the driver
+        if (driver != null) {
+            driver.quit();
         }
 
     }
 
     @Test
-    @DisplayName("sign up success")
+    @DisplayName("successful sign up")
     public void testSignUpSuccess() {
 
-        String swagLabs = new LoginPage(navegador)
+        String swagLabs = new LoginPage(driver)
                 .accessPage()
                 .validateLoginLogo();
 
-        // validar que o texto "Swag Labs" foi apresentado no elemento class "login_logo"
+        // validate that the text "Swag Labs" was presented in the class element "login_logo"
         Assertions.assertEquals("Swag Labs", swagLabs);
 
-        String products = new LoginPage(navegador)
+        String products = new LoginPage(driver)
                 .register("visual_user", "secret_sauce")
                 .validateProducts();
 
-        // validar que o texto "Products" foi apresentado no elemento class "span"
+        // validate tha the text "Products" was presented in the class element "span"
         Assertions.assertEquals("Products", products);
 
     }
 
     @Test
-    @DisplayName("sign up fail")
+    @DisplayName("unsuccessful sign up")
     public void testSignUpFail() {
 
-        new LoginPage(navegador)
+        new LoginPage(driver)
                 .accessPage()
-                .register("teste", "teste");
+                .register("test", "test");
 
-        String backgroundColor = new LoginPage(navegador)
+        String backgroundColor = new LoginPage(driver)
                 .validateErrorMessage();
 
-        // validar o background color da mensagem de erro no login
+        // validate the background color of the login error message
         Assertions.assertEquals("rgba(226, 35, 26, 1)", backgroundColor);
 
-        String loginColor = new LoginPage(navegador)
+        String loginColor = new LoginPage(driver)
                 .validateLoginButton();
 
-        // validar o background color do botão de login
+        // validate the background color of the login button
         Assertions.assertEquals("rgba(61, 220, 145, 1)", loginColor);
 
-        String swagLabs = new LoginPage(navegador)
+        String swagLabs = new LoginPage(driver)
                 .accessPage()
                 .validateLoginLogo();
 
-        // validar que o texto "Swag Labs" foi apresentado no elemento class "login_logo"
+        // validate that the text "Swag Labs" was presented in the class element "login_logo"
         Assertions.assertEquals("Swag Labs", swagLabs);
 
     }
 
     @Test
-    @DisplayName("add to cart and do checkout")
+    @DisplayName("add to cart and complete checkout")
     public void testAddToCartAndDoCheckout() {
 
-        String sauceLabsBackpack = new LoginPage(navegador)
+        String sauceLabsBackpack = new LoginPage(driver)
                 .accessPage()
                 .register("visual_user", "secret_sauce")
                 .addBackpackToCart()
                 .goToCart()
                 .validateItemName();
 
-        // validar se o nome do produto está correto
+        // validate that the product name is correct
         Assertions.assertEquals("Sauce Labs Backpack", sauceLabsBackpack);
 
-        String continueColor = new CartPage(navegador)
+        String continueColor = new CartPage(driver)
                 .goToCheckoutInfo()
                 .checkoutInformation("Diego", "Maradona", "31000000")
                 .validateContinue();
 
-        // validar o background color do botão de continue
+        // validate the background color of the continue button
         Assertions.assertEquals("rgba(61, 220, 145, 1)", continueColor);
 
-        String sauceLabsCheckout = new CheckoutInfoPage(navegador)
+        String sauceLabsCheckout = new CheckoutInfoPage(driver)
                 .clickContinue()
                 .validateItemName();
 
-        // validar se o nome do produto está correto no checkout
+        // validate that the product name is correct at checkout
         Assertions.assertEquals("Sauce Labs Backpack", sauceLabsCheckout);
 
-        String payment = new CheckoutViewPage(navegador)
+        String payment = new CheckoutViewPage(driver)
                 .validatePaymentInfo();
 
-        // validar o texto "Payment Information:"
+        // validate the text "Payment Information:"
         Assertions.assertEquals("Payment Information:", payment);
 
-        String shipping = new CheckoutViewPage(navegador)
+        String shipping = new CheckoutViewPage(driver)
                 .validateShippingInfo();
 
-        // validar o texto "Shipping Information:"
+        // validate the text "Shipping Information:"
         Assertions.assertEquals("Shipping Information:", shipping);
 
-        String price = new CheckoutViewPage(navegador)
+        String price = new CheckoutViewPage(driver)
                 .validatePriceTotal();
 
-        // validar o texto "Price Total"
+        // validate the text "Price Total"
         Assertions.assertEquals("Price Total", price);
 
-        String finishColor = new CheckoutViewPage(navegador)
+        String finishColor = new CheckoutViewPage(driver)
                 .validateFinish();
 
-        // validar o background color do botão de finish
+        // validate the background color of the finish button
         Assertions.assertEquals("rgba(61, 220, 145, 1)", finishColor);
 
-        String complete = new CheckoutViewPage(navegador)
+        String complete = new CheckoutViewPage(driver)
                 .clickFinish()
                 .validateComplete();
 
-        // validar o texto "Checkout: Complete!"
+        // validate the text "Checkout: Complete!"
         Assertions.assertEquals("Checkout: Complete!", complete);
 
-        String thankYou = new CheckoutCompletePage(navegador)
+        String thankYou = new CheckoutCompletePage(driver)
                 .validateThankYou();
 
-        // validar o texto "Thank you for your order!"
+        // validate the text "Thank you for your order!"
         Assertions.assertEquals("Thank you for your order!", thankYou);
 
-        String backHomeColor = new CheckoutCompletePage(navegador)
+        String backHomeColor = new CheckoutCompletePage(driver)
                 .validateBackHome();
 
-        // validar o background color do botão de back home
+        // validate the background color of the back home button
         Assertions.assertEquals("rgba(61, 220, 145, 1)", backHomeColor);
 
-        new CheckoutCompletePage(navegador)
+        new CheckoutCompletePage(driver)
                 .clickBackHome();
 
     }
 
     @Test
-    @DisplayName("add to cart and remove by click")
+    @DisplayName("add to cart and remove by a click")
     public void testAddToCartAndRemoveByClick() {
 
-        new LoginPage(navegador)
+        new LoginPage(driver)
                 .accessPage()
                 .register("visual_user", "secret_sauce")
                 .addBackpackToCart()
@@ -172,30 +172,30 @@ public class SauceDemoTests {
     }
 
     @Test
-    @DisplayName("add to cart and remove by cart")
+    @DisplayName("add to cart and remove by the cart")
     public void testAddToCartAndRemoveByCart() {
 
-        String sauceLabsBackpack = new LoginPage(navegador)
+        String sauceLabsBackpack = new LoginPage(driver)
                 .accessPage()
                 .register("visual_user", "secret_sauce")
                 .addBackpackToCart()
                 .goToCart()
                 .validateItemName();
 
-        // validar que o nome do produto está correto
+        // validate that the product name is correct
         Assertions.assertEquals("Sauce Labs Backpack", sauceLabsBackpack);
 
-        new CartPage(navegador)
+        new CartPage(driver)
                 .removeBackpackToCart()
                 .continueShopping();
 
     }
 
     @Test
-    @DisplayName("sign up success and logout")
+    @DisplayName("successful sign up and logout")
     public void testLoginSuccessAndLogout() {
 
-        new LoginPage(navegador)
+        new LoginPage(driver)
                 .accessPage()
                 .register("visual_user", "secret_sauce")
                 .clickBurgerMenu()
@@ -204,10 +204,10 @@ public class SauceDemoTests {
     }
 
     @Test
-    @DisplayName("reset app state")
+    @DisplayName("add to cart and reset app state")
     public void testResetAppState() {
 
-        new LoginPage(navegador)
+        new LoginPage(driver)
                 .accessPage()
                 .register("visual_user", "secret_sauce")
                 .addRedToCart()

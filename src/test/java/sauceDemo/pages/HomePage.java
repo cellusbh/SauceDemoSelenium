@@ -42,8 +42,8 @@ public class HomePage extends BasePage {
     @FindBy(xpath = "//span[text()='Products']")
     private WebElement products;
 
-    public HomePage(WebDriver navegador) {
-        super(navegador);
+    public HomePage(WebDriver driver) {
+        super(driver);
     }
 
     public String validateProducts() {
@@ -52,57 +52,57 @@ public class HomePage extends BasePage {
 
     public HomePage addBackpackToCart() {
         addBackpack.click();
-        return new HomePage(navegador);
+        return new HomePage(driver);
     }
 
     public HomePage addBikeToCart() {
         addBike.click();
-        return new HomePage(navegador);
+        return new HomePage(driver);
     }
 
     public HomePage addBoltToCart() {
         addBolt.click();
-        return new HomePage(navegador);
+        return new HomePage(driver);
     }
 
     public HomePage addJacketToCart() {
         addJacket.click();
-        return new HomePage(navegador);
+        return new HomePage(driver);
     }
 
     public HomePage addOnesieToCart() {
         addOnesie.click();
-        return new HomePage(navegador);
+        return new HomePage(driver);
     }
 
     public HomePage addRedToCart() {
         addRed.click();
-        return new HomePage(navegador);
+        return new HomePage(driver);
     }
 
     public HomePage removeBackpackToCart() {
         removeBackpack.click();
-        return new HomePage(navegador);
+        return new HomePage(driver);
     }
 
     public CartPage goToCart() {
         cartLink.click();
-        return new CartPage(navegador);
+        return new CartPage(driver);
     }
 
     public HomePage clickBurgerMenu() {
         burgerMenu.click();
-        return new HomePage(navegador);
+        return new HomePage(driver);
     }
 
     public LoginPage clickLogout() {
         logout.click();
-        return new LoginPage(navegador);
+        return new LoginPage(driver);
     }
 
     public HomePage clickReset() {
         reset.click();
-        return new HomePage(navegador);
+        return new HomePage(driver);
     }
 
 }

@@ -18,23 +18,23 @@ public class CartPage extends BasePage {
     @FindBy(className = "inventory_item_name")
     private WebElement itemName;
 
-    public CartPage(WebDriver navegador) {
-        super(navegador);
+    public CartPage(WebDriver driver) {
+        super(driver);
     }
 
     public CartPage removeBackpackToCart() {
         removeBackpack.click();
-        return new CartPage(navegador);
+        return new CartPage(driver);
     }
 
     public HomePage continueShopping() {
         backShopping.click();
-        return new HomePage(navegador);
+        return new HomePage(driver);
     }
 
     public CheckoutInfoPage goToCheckoutInfo() {
         checkoutButton.click();
-        return new CheckoutInfoPage(navegador);
+        return new CheckoutInfoPage(driver);
     }
 
     public String validateItemName() {

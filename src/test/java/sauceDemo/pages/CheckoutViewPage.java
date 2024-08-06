@@ -21,13 +21,13 @@ public class CheckoutViewPage extends BasePage {
     @FindBy(xpath = "//div[text()='Price Total']")
     private WebElement priceTotal;
 
-    public CheckoutViewPage(WebDriver navegador) {
-        super(navegador);
+    public CheckoutViewPage(WebDriver driver) {
+        super(driver);
     }
 
     public CheckoutCompletePage clickFinish() {
         finish.click();
-        return new CheckoutCompletePage(navegador);
+        return new CheckoutCompletePage(driver);
     }
 
     public String validateItemName() {

@@ -21,20 +21,20 @@ public class LoginPage extends BasePage {
     @FindBy(css = ".error-message-container.error")
     private WebElement errorMessage;
 
-    public LoginPage(WebDriver navegador) {
-        super(navegador);
+    public LoginPage(WebDriver driver) {
+        super(driver);
     }
 
     public LoginPage accessPage() {
-        navegador.get("https://www.saucedemo.com/");
-        return new LoginPage(navegador);
+        driver.get("https://www.saucedemo.com/");
+        return new LoginPage(driver);
     }
 
     public HomePage register(String username, String password) {
         insertUsername.sendKeys(username);
         insertPassword.sendKeys(password);
         loginButton.click();
-        return new HomePage(navegador);
+        return new HomePage(driver);
     }
 
     public String validateLoginLogo() {

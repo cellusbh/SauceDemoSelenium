@@ -15,13 +15,13 @@ public class CheckoutCompletePage extends BasePage {
     @FindBy(className = "complete-header")
     private WebElement thankYou;
 
-    public CheckoutCompletePage(WebDriver navegador) {
-        super(navegador);
+    public CheckoutCompletePage(WebDriver driver) {
+        super(driver);
     }
 
     public HomePage clickBackHome() {
         backHome.click();
-        return new HomePage(navegador);
+        return new HomePage(driver);
     }
 
     public String validateComplete() {
